@@ -1,7 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { DatabaseModel } from './model/DatabaseModel';
-import { log } from "console";
+import { Pessoa } from "./model/Pessoa";
+import PessoaController from './controller/PessoaController';
+
+//const pessoaController = new PessoaController('', '', '', '', '', '');
 
 //definindo a porta do servidor
 const port: number = 3333;
@@ -16,8 +19,11 @@ server.get('/', (req, res) => {
     res.json({mensagem: "Olá mundo, está é minha primeira aplicação web"});
 });
 
-server.get('/pessoas', (req, res) => {
-    res.json({mensagem: "Aqui será apresentado os dados das pessoas."});
+server.get('/pessoas', PessoaController.todos);
+
+server.get('/pessoas', async (req, res) => {
+    const pessoas = await Pessoa.listarPessoas();
+    res.json(pessoas);
 });
 
 new DatabaseModel().testeConexao().then((resdb) =>{
